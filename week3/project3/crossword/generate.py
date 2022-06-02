@@ -211,10 +211,8 @@ class CrosswordCreator():
     def number_of_neighbor_values_ruled_out(self, var, val, assignment):
         count_ruled_out = 0
         for neighbour in self.crossword.neighbors(var):
-
             if neighbour in assignment:
                 continue
-
             var_overlap, neighbour_overlap = self.crossword.overlaps[var, neighbour]
             for neighbour_val in self.domains[neighbour]:
                 if val[var_overlap] != neighbour_val[neighbour_overlap]:
