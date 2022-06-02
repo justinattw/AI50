@@ -1,5 +1,3 @@
-import pytest
-from crossword import *
 from generate import *
 
 
