@@ -203,12 +203,12 @@ class CrosswordCreator():
         that rules out the fewest values among the neighbors of `var`.
         """
         sorted_domain_values = sorted(self.domains[var],
-                                      key=lambda val: self.number_of_neighbor_values_ruled_out(var, val, assignment),
+                                      key=lambda val: self.num_neighbor_values_ruled_out(var, val, assignment),
                                       reverse=True)
 
         return sorted_domain_values
 
-    def number_of_neighbor_values_ruled_out(self, var, val, assignment):
+    def num_neighbor_values_ruled_out(self, var, val, assignment):
         count_ruled_out = 0
         for neighbour in self.crossword.neighbors(var):
             if neighbour in assignment:
@@ -251,6 +251,8 @@ class CrosswordCreator():
         for value in ordered_domain_values:
             assignment[var] = value
 
+            self.inference(assignment)
+
             if not self.consistent(assignment):
                 del assignment[var]
                 continue
@@ -262,6 +264,9 @@ class CrosswordCreator():
             del assignment[var]
 
         return "Failure"
+
+    def inference(self, assignment):
+        return
 
 
 def main():
