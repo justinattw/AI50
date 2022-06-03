@@ -2,7 +2,7 @@ import sys
 import tensorflow as tf
 
 # Use MNIST handwriting dataset
-mnist = tf.keras.datasets.mnist
+mnist = tf.keras.datasets.mnist  # mnist is a dataset provided by tensorflow
 
 # Prepare data for training
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
@@ -16,12 +16,12 @@ x_test = x_test.reshape(
     x_test.shape[0], x_test.shape[1], x_test.shape[2], 1
 )
 
-# Create a convolutional neural network
+# Create a convolutional neural network - pass into Sequential model a list of all the layers
 model = tf.keras.models.Sequential([
 
-    # Convolutional layer. Learn 32 filters using a 3x3 kernel
+    # Convolutional layer. Learn 32 different filters using a 3x3 kernel
     tf.keras.layers.Conv2D(
-        32, (3, 3), activation="relu", input_shape=(28, 28, 1)
+        32, (3, 3), activation="relu", input_shape=(28, 28, 1)  # 28*28 pixel grid with 1 channel value (black or white)
     ),
 
     # Max-pooling layer, using 2x2 pool size
@@ -41,7 +41,7 @@ model = tf.keras.models.Sequential([
 # Train neural network
 model.compile(
     optimizer="adam",
-    loss="categorical_crossentropy",
+    loss="categorical_hinge",
     metrics=["accuracy"]
 )
 model.fit(x_train, y_train, epochs=10)
