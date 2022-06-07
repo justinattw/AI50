@@ -14,9 +14,18 @@ V -> "arrived" | "came" | "chuckled" | "had" | "lit" | "said" | "sat"
 V -> "smiled" | "tell" | "were"
 """
 
+# S: Sentence
+# NP: Noun Phrase
+# ANP: Adjective Noun Phrase
+# VP: Verb Phrase
+# PP: Prepositional Phrase
+
 NONTERMINALS = """
-S -> N V
-S -> NP V NP
+S -> NP VP | S Conj S
+NP -> ANP | Det ANP | NP PP | NP Adv
+ANP -> N | Adj ANP
+VP -> V | V NP | V PP | V NP PP | Adv VP | V Adv | VP Conj VP
+PP -> P NP
 """
 
 grammar = nltk.CFG.fromstring(NONTERMINALS + TERMINALS)
@@ -63,8 +72,7 @@ def preprocess(sentence):
     and removing any word that does not contain at least one alphabetic
     character.
     """
-    sentence_list = [word.lower() for word in nltk.tokenize.word_tokenize(sentence) if any(c.isalpha() for c in word)]
-    return sentence_list
+    return [word.casefold() for word in nltk.tokenize.word_tokenize(sentence) if any(c.isalpha() for c in word)]
 
 
 def np_chunk(tree):
@@ -75,17 +83,15 @@ def np_chunk(tree):
     noun phrases as subtrees.
     """
     np_chunk_list = []
-    parse_np_chunk(tree, np_chunk_list)
+    for subtree in tree.subtrees():
+        if subtree.label() != "NP":
+            continue
+
+        subsubtrees = [subsubtree.label() for subsubtree in subtree.subtrees()]
+        if subsubtrees.count("NP") == 1:
+            np_chunk_list.append(subtree)
+
     return np_chunk_list
-
-
-def parse_np_chunk(tree, np_chunk_list):
-
-    if tree.label() == "NP":
-        np_chunk_list.append(tree)
-    else:
-        for subtree in tree:
-            parse_np_chunk(subtree, np_chunk_list)
 
 
 if __name__ == "__main__":
