@@ -88,7 +88,7 @@ def compute_idfs(documents):
     word_doc_appearances = dict()
     for title, document in documents.items():
         for word in document:
-            if word not in word_doc_appearances.keys():
+            if word not in word_doc_appearances:
                 word_doc_appearances[word] = {title}
             else:
                 word_doc_appearances[word].add(title)
@@ -96,7 +96,7 @@ def compute_idfs(documents):
     idfs = dict()
     for title, document in documents.items():
         for word in document:
-            if word in idfs.keys():
+            if word in idfs:
                 continue
 
             idf = math.log(len(documents) / len(word_doc_appearances[word]))
